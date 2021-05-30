@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ekspeace.notes.Adapter.RecyclerViewNotes;
 import com.ekspeace.notes.Model.Note;
+import com.ekspeace.notes.Model.PopUp;
 import com.ekspeace.notes.R;
 import com.ekspeace.notes.ViewModel.NoteViewModel;
 
@@ -25,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    private long backPressedTime = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,20 @@ public class MainActivity extends AppCompatActivity {
         String Date = simpleDateFormat.format(date);
         text.setText(Date);
     }
+
+    @Override
+    public void onBackPressed() {
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container));
+        long t = System.currentTimeMillis();
+        if (t - backPressedTime > 2000) {    // 2 secs
+            backPressedTime = t;
+            PopUp.Toast(MainActivity.this, layout,"Please press again to exit...", Toast.LENGTH_SHORT);
+        } else {
+            System.exit(0);
+        }
+    }
+
     private void PopulateRecyclerView(NoteViewModel noteViewModel, RecyclerView recyclerView, TextView textView){
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.custom_toast, findViewById(R.id.custom_toast_container));
